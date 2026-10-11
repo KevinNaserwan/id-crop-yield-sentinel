@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.geojson
+*.tif
+*.tiff
+*.nc
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+models/weights/*
+!models/weights/.gitkeep
+.env
+.venv
+venv/
