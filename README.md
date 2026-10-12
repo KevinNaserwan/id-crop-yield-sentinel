@@ -26,25 +26,45 @@ In Indonesia, staple food security is deeply vulnerable to severe tropical weath
 
 ## 🏛️ End-to-End Processing Pipeline
 
-```mermaid
-flowchart TD
-    A[Indonesian Paddy Parcel Polygons] --> B[Google Earth Engine API]
-    B -->|Optical L2A| C[Sentinel-2 Surface Reflectance]
-    B -->|SAR C-Band| D[Sentinel-1 GRD Backscatter VV/VH]
-    
-    C --> E[QA60 Bitmask Cloud Filtering]
-    E --> F[Savitzky-Golay Interpolation]
-    F --> G[Vegetation Indices: NDVI, NDRE, NDWI, EVI]
-    
-    D --> H[Radiometric Calibration & Speckle Filter]
-    H --> I[SAR Polarization Cross-Ratio VH/VV]
-    
-    G --> J[Temporal Feature Fusion Matrix]
-    I --> J
-    
-    J --> K[SpatioTemporalYieldNet Bi-LSTM + Attention]
-    K --> L[Yield Prediction Tons/Ha]
-    K --> M[Crop Failure Risk Index Puso]
+```
++-------------------------------------------------------------------------+
+|                  GEOSPATIAL SENTINEL DATA PIPELINE                     |
++-------------------------------------------------------------------------+
+
+ [ Indonesian Paddy Parcel Boundary Polygons (GeoJSON / Shapefile) ]
+                                    |
+                                    v
+                 [ Google Earth Engine (GEE) Ingestion API ]
+                                    |
+                 +------------------+------------------+
+                 |                                     |
+                 v (Optical L2A)                       v (SAR C-Band)
+ +-------------------------------+     +-------------------------------+
+ | Sentinel-2 Surface Reflectance|     | Sentinel-1 GRD Backscatter    |
+ +---------------+---------------+     +---------------+---------------+
+                 |                                     |
+                 v                                     v
+ | QA60 Bitmask Cloud Filter     |     | Radiometric Calibration       |
+ | Savitzky-Golay Interpolation  |     | Lee Speckle Noise Filter      |
+ | Indices: NDVI, NDRE, NDWI, EVI|     | Cross-Ratio VH / VV           |
+ +---------------+---------------+     +---------------+---------------+
+                 |                                     |
+                 +------------------+------------------+
+                                    |
+                                    v
+ +---------------------------------------------------------------------+
+ |                 TEMPORAL FEATURE FUSION MATRIX                      |
+ +----------------------------------+----------------------------------+
+                                    |
+                                    v
+ +---------------------------------------------------------------------+
+ |              SpatioTemporalYieldNet (Bi-LSTM + Attention)           |
+ +----------------------------------+----------------------------------+
+                                    |
+                 +------------------+------------------+
+                 |                                     |
+                 v                                     v
+ [ Grain Yield Output: Metric Tons / Ha ]   [ Risk Index: Puso Alert ]
 ```
 
 ---
